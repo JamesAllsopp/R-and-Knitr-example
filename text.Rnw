@@ -1,0 +1,83 @@
+\documentclass{article}
+\usepackage[utf8]{inputenc}
+\begin{document}
+
+\section{Using R and Latex together}
+
+Save this text file as text.Rnw and we'll use the knitr package in R to preprocess this, before compiling it in Latex and producing a pdf.
+
+To do this, I used the command line in linux after installing R and all the TexLive packages.
+
+Once you've installed R, start it up and run the following commands;
+\textit{install.packages("knitr")}
+\textit{install.packages("ggplot2")}
+\textit{install.packages("kable")}
+
+You'll be prompted to set a mirror for each, which is a location you can download from, use the one closest to you. After this, quit out of R.
+
+
+Let's test using R and Latex using the mtcars dataset.
+
+I followed the instructions here http://edrub.in/ARE212/latexKnitr.html and here https://sachsmc.github.io/knit-git-markr-guide/knitr/knit.html
+
+Remember indexing starts at 1 not 0
+
+I ran this outside Rstudio, although I think you could get it to work from inside that.
+
+The sapply function just runs the functions mean and sd on each column in the mtcars dataframe.
+
+2+2 is a demonstration
+
+<<kable>>=
+n <- 100
+x <- rnorm(n)
+y <- 2*x + rnorm(n)
+out <- lm(y ~ x)
+library(knitr)
+kable(summary(out)$coef, digits=2)
+@
+
+<<"Test 1">>=
+
+data(mtcars)
+mean<-sapply(mtcars,mean)
+sd<-sapply(mtcars,sd)
+2+2
+
+
+
+print("dataframe without nice formatting")
+mtcars
+
+print("dataframe with nice formatting")
+kable(head(mtcars), digits=2)
+print("Means of each column in mtcars")
+
+mean
+
+@
+
+Now we've done tables, let's try using ggplot2.
+
+<<"Test 2">>=
+library('ggplot2')
+sd
+ggplot(mtcars, aes(x=hp, y=mpg, color=cyl)) +
+    geom_point(size=3)
+@
+
+\section{Building the document}
+
+All of these commands should be run from the commandline in the directory containing text.Rnw, by the user who ran install.packages.
+
+\subsection{Create the tex file}
+
+\textit{Rscript -e "library(knitr); knit('text.Rnw')"}
+
+This will take this document(text.Rnw) and produces a text.tex file.
+
+\textit{pdflatex text.tex}
+
+This takes your text.tex file and produces a file called text.pdf
+
+\end{document}
