@@ -5,10 +5,9 @@
 
 \section{Using R and Latex together}
 
-Save this text file as \texttt{text.Rnw} and we'll use the \href{knitr}{https://yihui.org/knitr/} package in
-\href{https://www.r-project.org}{R} to process this it to a \href{.tex} file before compiling it in \LaTeX to produce a
+Save this text file as \texttt{text.Rnw} and we'll use the \href{https://yihui.org/knitr/}{knitr} package in
+\href{https://www.r-project.org}{R} to process this to a \texttt{.tex} file before compiling it in \LaTeX to produce a
 PDF.
-
 
 To do this, we use the command line in Linux after \href{https://rstudio-education.github.io/hopr/starting.html}{installing R} and all the \href{https://tug.org/texlive/}{TexLive} packages.
 
