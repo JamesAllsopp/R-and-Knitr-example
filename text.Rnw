@@ -1,83 +1,136 @@
 \documentclass{article}
 \usepackage[utf8]{inputenc}
+\usepackage{hyperref}
 \begin{document}
 
 \section{Using R and Latex together}
 
-Save this text file as text.Rnw and we'll use the knitr package in R to preprocess this, before compiling it in Latex and producing a pdf.
-
-To do this, I used the command line in linux after installing R and all the TexLive packages.
-
-Once you've installed R, start it up and run the following commands;
-\textit{install.packages("knitr")}
-\textit{install.packages("ggplot2")}
-\textit{install.packages("kable")}
-
-You'll be prompted to set a mirror for each, which is a location you can download from, use the one closest to you. After this, quit out of R.
+Save this text file as \texttt{text.Rnw} and we'll use the \href{knitr}{https://yihui.org/knitr/} package in
+\href{https://www.r-project.org}{R} to process this it to a \href{.tex} file before compiling it in \LaTeX to produce a
+PDF.
 
 
-Let's test using R and Latex using the mtcars dataset.
+To do this, we use the command line in Linux after \href{https://rstudio-education.github.io/hopr/starting.html}{installing R} and all the \href{https://tug.org/texlive/}{TexLive} packages.
 
-I followed the instructions here http://edrub.in/ARE212/latexKnitr.html and here https://sachsmc.github.io/knit-git-markr-guide/knitr/knit.html
+Once you've installed R, start it up and run the following commands\ldots
+\begin{verbatim}
+install.packages("knitr")
+install.packages("ggplot2")
+install.packages("kable")
+\end{verbatim}
 
-Remember indexing starts at 1 not 0
+You'll be prompted to set a mirror for each, which is a location you can download from, use one that is geographically closes to
+you. After this, exit R (use \texttt{q()}).
 
-I ran this outside Rstudio, although I think you could get it to work from inside that.
 
-The sapply function just runs the functions mean and sd on each column in the mtcars dataframe.
+\subsection{Embedding R Code}
 
-2+2 is a demonstration
+Let's test using R and \LaTeX using the \texttt{mtcars} dataset.
+
+Each section of code is encapsulated by a header \texttt{<<>>=} and footer \texttt{@}. The header can take various
+arguments such as a chunk name, in this example \texttt{``Load Libraries''} and various
+
+First we import the libraries that we will use. We don't want to show this output so we used the \texttt{echo=FALSE}
+option to the codechunk header, this hides the output.
+
+<<"Load Libraries", echo=FALSE>>=
+library(knitr)
+library(ggplot2)
+@
+
+\subsubsection{Example 1 - Printing Results}
+
+We load the \texttt{mtcars} dataset and derive the mean and standard deviation for all rows using \texttt{sapply}, which
+performs all functions to all columns of a data frame.
+
+<<"Summarise mtcars", echo=TRUE>>=
+
+data(mtcars)
+mean<-sapply(mtcars,mean)
+sd<-sapply(mtcars,sd)
+@
+
+<<"Add two numbers", echo=TRUE>>=
+2+2
+@
+
+We can print out dataframes too.
+
+<<"Unformatted DataFrame">>=
+print("dataframe without nice formatting")
+head(mtcars)
+@
+
+But its better to use the \texttt{kable} package to format our tables.
+
+<<"Formatted DataFrame">>=
+print("dataframe with nice formatting")
+kable(head(mtcars), digits=2)
+@
+
+\subsubsection{Example 2 - Summarising Data}
+
+We generate two random variables \texttt{x} and \texttt{y} and regress \texttt{x} on \texttt{y} (\texttt{lm(y ~ x)}),
+saving the outuput in \texttt{out} and then summarise the coefficients using \texttt{kable()} to make the output look
+nicer.
 
 <<kable>>=
 n <- 100
 x <- rnorm(n)
 y <- 2*x + rnorm(n)
 out <- lm(y ~ x)
-library(knitr)
-kable(summary(out)$coef, digits=2)
+summary(out)$coef |>
+               kable(, digits=2)
 @
 
-<<"Test 1">>=
 
-data(mtcars)
-mean<-sapply(mtcars,mean)
-sd<-sapply(mtcars,sd)
-2+2
+\subsubsection{Example 3 - Graphs}
 
+Now we've done tables, let's use \href{https://ggplot2.tidyverse.org/}{ggplot2} to plot some data. We
 
-
-print("dataframe without nice formatting")
-mtcars
-
-print("dataframe with nice formatting")
-kable(head(mtcars), digits=2)
-print("Means of each column in mtcars")
-
-mean
-
-@
-
-Now we've done tables, let's try using ggplot2.
-
-<<"Test 2">>=
-library('ggplot2')
-sd
+<<"Plotting with ggplot2">>=
 ggplot(mtcars, aes(x=hp, y=mpg, color=cyl)) +
     geom_point(size=3)
 @
 
 \section{Building the document}
 
-All of these commands should be run from the commandline in the directory containing text.Rnw, by the user who ran install.packages.
+\subsection{At the Command Line}
+
+All of these commands should be run from the commandline in the directory containing \texttt{text.Rnw}, by the user who
+ran \texttt{install.packages()}.
 
 \subsection{Create the tex file}
 
-\textit{Rscript -e "library(knitr); knit('text.Rnw')"}
+We run R using the \texttt{Rscript} command passing it a command to execute using the \texttt{-e} flag. The command we
+want to include is to then follows in double quotes and we load the \texttt{knitr} library and then use the
+\texttt{knit()} command to process the \texttt{text.Rnw}.
 
-This will take this document(text.Rnw) and produces a text.tex file.
+\begin{verbatim}
+  Rscript -e "library(knitr); knit('text.Rnw')"
+\end{verbatim}
 
-\textit{pdflatex text.tex}
+This outputs a \texttt{text.tex} file which we can use as input to \texttt{pdflatex} which will output \texttt{text.pdf}.
 
-This takes your text.tex file and produces a file called text.pdf
+\begin{verbatim}
+  pdflatex text.tex
+\end{verbatim}
+
+\section{Using RStudio}
+
+If you use \href{https://www.rstudio.com/categories/rstudio-ide/}{Rstudio} and have the \texttt{text.Rnw} file open then
+you can produce a PDF by clicking on the ``knit'' button and selecting ``PDF''.
+
+\subsection{Resources}
+
+The following guides were used in developing this material
+
+\begin{itemize}
+\item \href{http://edrub.in/ARE212/latexKnitr.html}{here}
+\item \href{https://sachsmc.github.io/knit-git-markr-guide/knitr/knit.html}{here}
+\item \href{https://yihui.org/knitr/}{knitr}
+\item \href{https://github.com/yihui/knitr/releases/download/doc/knitr-manual.pdf}{Knitr Manual}
+\item \href{https://github.com/yihui/knitr/releases/download/doc/knitr-graphics.pdf}{Knitr Graphics}
+\end{itemize}
 
 \end{document}
