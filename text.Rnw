@@ -115,18 +115,18 @@ This outputs a \texttt{text.tex} file which we can use as input to \texttt{pdfla
   pdflatex text.tex
 \end{verbatim}
 
-\section{Using RStudio}
+\subsubsection{Using RStudio}
 
 If you use \href{https://www.rstudio.com/categories/rstudio-ide/}{Rstudio} and have the \texttt{text.Rnw} file open then
 you can produce a PDF by clicking on the ``knit'' button and selecting ``PDF''.
 
-\subsection{Resources}
+\section{Resources}
 
 The following guides were used in developing this material
 
 \begin{itemize}
-\item \href{http://edrub.in/ARE212/latexKnitr.html}{here}
-\item \href{https://sachsmc.github.io/knit-git-markr-guide/knitr/knit.html}{here}
+\item \href{https://edrub.in/ARE212/latexKnitr.html}{LaTeX and Knitr}
+\item \href{https://sachsmc.github.io/knit-git-markr-guide/knitr/knit.html}{Introduction to knitr}
 \item \href{https://yihui.org/knitr/}{knitr}
 \item \href{https://github.com/yihui/knitr/releases/download/doc/knitr-manual.pdf}{Knitr Manual}
 \item \href{https://github.com/yihui/knitr/releases/download/doc/knitr-graphics.pdf}{Knitr Graphics}
